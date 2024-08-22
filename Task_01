@@ -1,0 +1,170 @@
+public interface command {
+  void execute ();
+  void undo ();
+}
+public interface Light {
+  void on ();
+  void off ();
+  void dim (int level);
+public class KitchenRoomLight implenments Light {
+  private int brightness=0;
+  @override
+  public void on () {
+    brightness=100;
+    System.Out.Println("Kitchen room light is ON at Brightness level" + "brightness" );
+  }
+  @override
+  public void off () {
+    brightness=0;
+    System.Out.Println("Kitchen room light is OFF");
+  }
+  @override
+  public void dim () {
+    brightness=level;
+    System.Out.Println("Kitchen room light dimmed to" + "brighness");
+  }
+  public int getBrightness () {
+    return brightness;
+  }
+}
+public class LivingRoomLight implements Light {
+  private int brightness=0;
+  @override
+  public void on () {
+  brightness=100;
+  System.Out.Println("Living rooom light is ON at Brightness level" + "brightness" );
+  }
+  @override
+  public void off () {
+    brightness=0;
+    System.Out.Println("Living room light is OFF");
+  }
+  @override
+  public void dim () {
+    brightness=level;
+    System.Out.Println("Kitchen room light dimmed to" + "brighness");
+  }
+  public int getBrightness () {
+    return brightness;
+  }
+}
+public class LightOnCommand implements command{
+  private Light light;
+  public LightOnCommand(Light light) {
+    this.light=light;
+  }
+  @override 
+  public void execute() {
+  light.on();
+  }
+  @override
+  public void undo() {
+  light.off();
+  }
+public class LightOffCommand implements command{
+  private Light light;
+  public LightOffCommand(Light light) {
+    this.light=light;
+  }
+  @override 
+  public void execute() {
+  light.off();
+  }
+  @override
+  public void undo() {
+  light.on();
+  }
+  public class LightDimCommand implements command {
+    private Light light;
+    private int previousLevel;
+    private int newLevel;
+  public LightDimCommand(Light light,int level) {
+    this light=light;
+    this newLevel=level;
+  }
+  @override
+  public void execute() {
+    previousLevel=light.getBrightness();
+    light.dim(newlevel);
+  }
+  @override
+  public void undo() {
+    light.dim(previousLevel);
+  }
+}
+public class RemoteControl {
+  private Command[] onCommands;
+  private Command[] offCommands;
+  private Command[] undoCommand;
+  public RemoteControl() {
+    onCommands = new Commands [7];
+    offCommands = new Commands [7];
+    command noCommand = new NoCommand();
+    for (int i=0; int i<7; i++); {
+      onCommands[i]=noCommand;
+      offCommands[i]=noCommand;
+    }
+      undoCommand = noCommand;
+}
+public void setCommand(int slot,command onCommand,command offCommand) {
+  onCommand [slot]=onCommand;
+  offCommand [slot]=offCommand;
+}
+public void onButtonWasPushed(int slot) {
+  onCommand[slot].execute();
+  undoCommand=onCommand[slot];
+}
+public void offButtonWasPushed(int slot) {
+        offCommands[slot].execute();
+        undoCommand = offCommands[slot];
+    }
+
+    public void undoButtonWasPushed() {
+        undoCommand.undo();
+    }
+}
+
+class NoCommand implements Command {
+    @Override
+    public void execute() {}
+
+    @Override
+    public void undo() {}
+}
+
+public class Test {
+    public static void main(String[] args) {
+        RemoteControl remoteControl = new RemoteControl();
+
+        KitchenRoomLight kitchenLight = new KitchenRoomLight();
+        LivingRoomLight livingRoomLight = new LivingRoomLight();
+
+        LightOnCommand kitchenLightOn = new LightOnCommand(kitchenLight);
+        LightOffCommand kitchenLightOff = new LightOffCommand(kitchenLight);
+        LightDimCommand kitchenLightDim = new LightDimCommand(kitchenLight, 50);
+
+        LightOnCommand livingRoomLightOn = new LightOnCommand(livingRoomLight);
+        LightOffCommand livingRoomLightOff = new LightOffCommand(livingRoomLight);
+        LightDimCommand livingRoomLightDim = new LightDimCommand(livingRoomLight, 30);
+
+        remoteControl.setCommand(0, kitchenLightOn, kitchenLightOff);
+        remoteControl.setCommand(1, livingRoomLightOn, livingRoomLightOff);
+
+        System.out.println("--- Kitchen Light ON ---");
+        remoteControl.onButtonWasPushed(0);
+        System.out.println("--- Kitchen Light OFF ---");
+        remoteControl.offButtonWasPushed(0);
+        System.out.println("--- Undoing Kitchen Light OFF ---");
+        remoteControl.undoButtonWasPushed();
+
+        System.out.println("--- Living Room Light ON ---");
+        remoteControl.onButtonWasPushed(1);
+        System.out.println("--- Living Room Light Dim to 30 ---");
+        kitchenLightDim.execute();
+        System.out.println("--- Undoing Living Room Light Dim ---");
+        kitchenLightDim.undo();
+    }
+}
+
+
+
