@@ -1,0 +1,87 @@
+public abstract class Beverages {
+    private boolean wantsExtras;
+
+    public abstract void brew();
+    public abstract void addCondiments();
+    public abstract void addExtras();
+
+    public void boilWater() {
+        System.out.println("Boiling water");
+    }
+
+    public void pourInCup() {
+        System.out.println("Pouring into cup");
+    }
+
+    public void finalTemplateMethod() {
+        boilWater();
+        brew();
+        pourInCup();
+        addCondiments();
+        if (wantsExtras) {
+            addExtras();
+        }
+    }
+
+    public void setWantsExtras(boolean wantsExtras) {
+        this.wantsExtras = wantsExtras;
+    }
+}
+public class Tea extends Beverages {
+    @Override
+    public void brew() {
+        System.out.println("Steeping the tea");
+    }
+
+    @Override
+    public void addCondiments() {
+        System.out.println("Adding lemon");
+    }
+
+    @Override
+    public void addExtras() {
+        System.out.println("Adding honey");
+    }
+}
+public class Coffee extends Beverages {
+    @Override
+    public void brew() {
+        System.out.println("Dripping coffee through filter");
+    }
+
+    @Override
+    public void addCondiments() {
+        System.out.println("Adding sugar and milk");
+    }
+
+    @Override
+    public void addExtras() {
+        System.out.println("Adding whipped cream");
+    }
+}
+import java.util.Scanner;
+
+public class BeverageTest {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        Tea tea = new Tea();
+        Coffee coffee = new Coffee();
+
+        System.out.println("Do you want extras in your tea? (yes/no)");
+        String teaExtras = scanner.nextLine();
+        tea.setWantsExtras(teaExtras.equalsIgnoreCase("yes"));
+
+        System.out.println("Do you want extras in your coffee? (yes/no)");
+        String coffeeExtras = scanner.nextLine();
+        coffee.setWantsExtras(coffeeExtras.equalsIgnoreCase("yes"));
+
+        System.out.println("\nPreparing Tea...");
+        tea.finalTemplateMethod();
+
+        System.out.println("\nPreparing Coffee...");
+        coffee.finalTemplateMethod();
+
+        scanner.close();
+    }
+}
