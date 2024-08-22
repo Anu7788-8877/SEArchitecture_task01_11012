@@ -1,0 +1,99 @@
+public interface Shape {
+    void draw();
+}
+public class Square implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Square:");
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+    }
+}
+public class Circle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Circle:");
+        int radius = 3;
+        double dist;
+
+        for (int i = 0; i <= 2 * radius; i++) {
+            for (int j = 0; j <= 2 * radius; j++) {
+                dist = Math.sqrt((i - radius) * (i - radius) + (j - radius) * (j - radius));
+                if (dist > radius - 0.5 && dist < radius + 0.5) {
+                    System.out.print("* ");
+                } else {
+                    System.out.print("  ");
+                }
+            }
+            System.out.println();
+        }
+    }
+}
+public class Triangle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Triangle:");
+        for (int i = 1; i <= 5; i++) {
+            for (int j = 1; j <= i; j++) {
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+    }
+}
+public class Rectangle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Rectangle:");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 7; j++) {
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+    }
+}
+public class ShapeFactory {
+    public Shape getShape(String shapeType) {
+        if (shapeType == null) {
+            return null;
+        }
+        switch (shapeType.toLowerCase()) {
+            case "square":
+                return new Square();
+            case "circle":
+                return new Circle();
+            case "triangle":
+                return new Triangle();
+            case "rectangle":
+                return new Rectangle();
+            default:
+                return null;
+        }
+    }
+}
+import java.util.Scanner;
+
+public class ShapeTest {
+    public static void main(String[] args) {
+        ShapeFactory shapeFactory = new ShapeFactory();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the name of the shape to draw (Square, Circle, Triangle, Rectangle):");
+        String shapeType = scanner.nextLine();
+
+        Shape shape = shapeFactory.getShape(shapeType);
+
+        if (shape != null) {
+            shape.draw();
+        } else {
+            System.out.println("Invalid shape type.");
+        }
+
+        scanner.close();
+    }
+}
